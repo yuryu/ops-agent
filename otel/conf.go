@@ -17,9 +17,9 @@ package otel
 
 import (
 	"fmt"
-	"time"
 	"strings"
 	"text/template"
+	"time"
 )
 
 const (
@@ -101,6 +101,29 @@ service:
         static_configs:
         - targets: ['0.0.0.0:8888']`
 
+	fluentBitReceiverConf = `prometheus/fluentbit:
+    config:
+      scrape_configs:
+        - job_name: 'fluentbit'
+          metrics_path: '/api/v1/metrics/prometheus'
+          scrape_interval: 1m
+          static_configs:
+            - targets: ['0.0.0.0:2020']
+          metric_relabel_configs:
+          # drop the metrics we aren't using
+          - source_labels: [ __name__ ]
+            regex: 'fluentbit_build_info'
+            action: drop
+          - source_labels: [ __name__ ]
+            regex: 'process_start_time_seconds'
+            action: drop
+          - source_labels: [ __name__ ]
+            regex: "fluentbit_(filter|input_bytes|input_files|output_proc|output_errors|output_retries_failed)_.*"
+            action: drop
+          # drop the 'name' label for each metric - we will combine all sources into one
+          - regex: 'name'
+            action: labeldrop'`
+
 	agentExporterConf = `stackdriver/agent:
     user_agent: $USERAGENT
     metric:
@@ -110,6 +133,7 @@ service:
     metrics/agent:
       receivers:
         - prometheus/agent
+	- prometheus/fluentbit
       processors:
         - filter/agent
         - metricstransform/agent
@@ -143,6 +167,20 @@ service:
   # convert from opentelemetry metric formats to cloud monitoring formats
   metricstransform/system:
     transforms:
+      # fluentbit_filter_emit_records_total -> agent/log_entry_count
+      - metric_name: fluentbit_input_records_total
+        action: update
+        new_name: agent/log_entry_count
+        operations:
+          # change data type from double -> int64
+          - action: toggle_scalar_data_type
+      # fluentbit_output_retries_total -> agent/log_entry_retry_count
+      - metric_name: fluentbit_output_retries_total
+        action: update
+        new_name: agent/log_entry_retry_count
+        operations:
+          # change data type from double -> int64
+          - action: toggle_scalar_data_type
       # system.cpu.time -> cpu/usage_time
       - metric_name: system.cpu.time
         action: update
@@ -524,7 +562,7 @@ func validateCollectionInterval(collectionInterval string, pluginName string) (b
 }
 
 type MSSQL struct {
-	MSSQLID string
+	MSSQLID            string
 	CollectionInterval string
 }
 
@@ -548,7 +586,7 @@ func (m MSSQL) renderConfig() (string, error) {
 }
 
 type IIS struct {
-	IISID string
+	IISID              string
 	CollectionInterval string
 }
 
@@ -633,7 +671,7 @@ func GenerateOtelConfig(hostMetricsList []*HostMetrics, mssqlList []*MSSQL, iisL
 	exportersConfigSection := []string{}
 	processorsConfigSection := []string{}
 	serviceConfigSection := []string{}
-	receiversConfigSection = append(receiversConfigSection, agentReceiverConf)
+	receiversConfigSection = append(receiversConfigSection, agentReceiverConf, fluentBitReceiverConf)
 	exportersConfigSection = append(exportersConfigSection, agentExporterConf)
 	serviceConfigSection = append(serviceConfigSection, agentServiceConf)
 	for _, h := range hostMetricsList {
