@@ -56,18 +56,17 @@ func TestHostMetricsErrors(t *testing.T) {
 		{
 			name: "invalid collection interval",
 			hostmetrics: HostMetrics{
-				HostMetricsID: "hostmetrics",
+				HostMetricsID:      "hostmetrics",
 				CollectionInterval: "60",
 			},
 		},
 		{
 			name: "collection interval too short",
 			hostmetrics: HostMetrics{
-				HostMetricsID: "hostmetrics",
+				HostMetricsID:      "hostmetrics",
 				CollectionInterval: "1s",
 			},
 		},
-
 	}
 	for _, tc := range tests {
 		if _, err := tc.hostmetrics.renderConfig(); err == nil {
@@ -84,7 +83,7 @@ func TestIIS(t *testing.T) {
 	}{
 		{
 			iis: IIS{
-				IISID: "iis",
+				IISID:              "iis",
 				CollectionInterval: "60s",
 			},
 			expectedIISConfig: `windowsperfcounters/iis_iis:
@@ -125,7 +124,7 @@ func TestMSSQL(t *testing.T) {
 	}{
 		{
 			mssql: MSSQL{
-				MSSQLID: "mssql",
+				MSSQLID:            "mssql",
 				CollectionInterval: "60s",
 			},
 			expectedMSSQLConfig: `windowsperfcounters/mssql_mssql:
@@ -217,8 +216,8 @@ func TestGenerateOtelConfig(t *testing.T) {
 	tests := []struct {
 		name            string
 		hostMetricsList []*HostMetrics
-		mssqlList []*MSSQL
-		iisList []*IIS
+		mssqlList       []*MSSQL
+		iisList         []*IIS
 		stackdriverList []*Stackdriver
 		serviceList     []*Service
 		want            string
@@ -230,11 +229,11 @@ func TestGenerateOtelConfig(t *testing.T) {
 				CollectionInterval: "60s",
 			}},
 			mssqlList: []*MSSQL{{
-				MSSQLID: "mssql",
+				MSSQLID:            "mssql",
 				CollectionInterval: "60s",
 			}},
 			iisList: []*IIS{{
-				IISID: "iis",
+				IISID:              "iis",
 				CollectionInterval: "60s",
 			}},
 			stackdriverList: []*Stackdriver{{
@@ -248,17 +247,17 @@ func TestGenerateOtelConfig(t *testing.T) {
 				Processors: "[agentmetrics/system,filter/system,metricstransform/system,resourcedetection]",
 				Exporters:  "[stackdriver/google]",
 			},
-			{
-				ID:         "mssql",
-				Receivers:  "[windowsperfcounters/mssql_mssql]",
-				Processors: "[metricstransform/mssql,resourcedetection]",
-				Exporters:  "[stackdriver/google]",
-			},
-			{	ID:         "iis",
-				Receivers:  "[windowsperfcounters/iis_iis]",
-				Processors: "[metricstransform/iis,resourcedetection]",
-				Exporters:  "[stackdriver/google]",
-			},
+				{
+					ID:         "mssql",
+					Receivers:  "[windowsperfcounters/mssql_mssql]",
+					Processors: "[metricstransform/mssql,resourcedetection]",
+					Exporters:  "[stackdriver/google]",
+				},
+				{ID: "iis",
+					Receivers:  "[windowsperfcounters/iis_iis]",
+					Processors: "[metricstransform/iis,resourcedetection]",
+					Exporters:  "[stackdriver/google]",
+				},
 			},
 			want: `receivers:
   prometheus/agent:
@@ -268,6 +267,28 @@ func TestGenerateOtelConfig(t *testing.T) {
         scrape_interval: 1m
         static_configs:
         - targets: ['0.0.0.0:8888']
+  prometheus/fluentbit:
+    config:
+      scrape_configs:
+        - job_name: 'fluentbit'
+          metrics_path: '/api/v1/metrics/prometheus'
+          scrape_interval: 1m
+          static_configs:
+            - targets: ['0.0.0.0:2020']
+          metric_relabel_configs:
+          # drop the metrics we aren't using
+          - source_labels: [ __name__ ]
+            regex: 'fluentbit_build_info'
+            action: drop
+          - source_labels: [ __name__ ]
+            regex: 'process_start_time_seconds'
+            action: drop
+          - source_labels: [ __name__ ]
+            regex: "fluentbit_(filter|input_bytes|input_files|output_proc|output_errors|output_retries_failed)_.*"
+            action: drop
+          # drop the 'name' label for each metric - we will combine all sources into one
+          - regex: 'name'
+            action: labeldrop
   hostmetrics/hostmetrics:
     collection_interval: 60s
     scrapers:
@@ -331,6 +352,20 @@ processors:
   # convert from opentelemetry metric formats to cloud monitoring formats
   metricstransform/system:
     transforms:
+      # fluentbit_filter_emit_records_total -> agent/log_entry_count
+      - metric_name: fluentbit_input_records_total
+        action: update
+        new_name: agent/log_entry_count
+        operations:
+          # change data type from double -> int64
+          - action: toggle_scalar_data_type
+      # fluentbit_output_retries_total -> agent/log_entry_retry_count
+      - metric_name: fluentbit_output_retries_total
+        action: update
+        new_name: agent/log_entry_retry_count
+        operations:
+          # change data type from double -> int64
+          - action: toggle_scalar_data_type
       # system.cpu.time -> cpu/usage_time
       - metric_name: system.cpu.time
         action: update
@@ -699,6 +734,7 @@ service:
     metrics/agent:
       receivers:
         - prometheus/agent
+	- prometheus/fluentbit
       processors:
         - filter/agent
         - metricstransform/agent

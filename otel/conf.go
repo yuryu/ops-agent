@@ -122,7 +122,7 @@ service:
             action: drop
           # drop the 'name' label for each metric - we will combine all sources into one
           - regex: 'name'
-            action: labeldrop'`
+            action: labeldrop`
 
 	agentExporterConf = `stackdriver/agent:
     user_agent: $USERAGENT
