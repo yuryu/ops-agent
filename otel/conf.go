@@ -88,7 +88,7 @@ service:
           - Transactions/sec
           - Write Transactions/sec`
 
-	stackdriverExporterConf = `stackdriver/{{.StackdriverID}}:
+	stackdriverExporterConf = `googlecloud/{{.StackdriverID}}:
     user_agent: {{.UserAgent}}
     metric:
       prefix: {{.Prefix}}`
@@ -101,7 +101,7 @@ service:
         static_configs:
         - targets: ['0.0.0.0:8888']`
 
-	agentExporterConf = `stackdriver/agent:
+	agentExporterConf = `googlecloud/agent:
     user_agent: $USERAGENT
     metric:
       prefix: agent.googleapis.com/`
@@ -115,7 +115,7 @@ service:
         - metricstransform/agent
         - resourcedetection
       exporters:
-        - stackdriver/agent`
+        - googlecloud/agent`
 
 	serviceConf = `metrics/{{.ID}}:
       receivers:  {{.Receivers}}
