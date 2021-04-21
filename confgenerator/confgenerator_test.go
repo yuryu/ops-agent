@@ -53,9 +53,10 @@ var hostInfo *host.InfoStat
 
 func init() {
 	hostInfo, _ = host.Info()
-	if hostInfo.OS == "windows" {
+	if hostInfo.OS != "windows" {
 		platform = "windows"
 		//In order to make test data static, we put static value for platform-wise fields.
+		hostInfo.OS = "windows"
 		hostInfo.Platform = "win_platform"
 		hostInfo.PlatformVersion = "win_platform_version"
 	} else {
