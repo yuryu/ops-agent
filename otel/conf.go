@@ -138,7 +138,7 @@ service:
       exclude:
         match_type: strict
         metric_names:
-          - system.network.dropped_packets
+          - system.network.dropped
 
   # convert from opentelemetry metric formats to cloud monitoring formats
   metricstransform/system:
@@ -199,8 +199,8 @@ service:
       - metric_name: system.disk.write_io
         action: update
         new_name: disk/write_bytes_count
-      # system.disk.ops -> disk/operation_count
-      - metric_name: system.disk.ops
+      # system.disk.operations -> disk/operation_count
+      - metric_name: system.disk.operations
         action: update
         new_name: disk/operation_count
       # system.disk.io_time -> disk/io_time
