@@ -12,7 +12,7 @@ import (
 )
 
 const dataDirectory = `Google/Cloud Operations/Ops Agent`
-const serviceName = "google-cloud-ops-agent"
+const serviceName = "google-cloud-ops-agent-1"
 const serviceDisplayName = "Google Cloud Ops Agent"
 
 var (

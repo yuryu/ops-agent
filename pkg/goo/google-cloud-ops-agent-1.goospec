@@ -5,7 +5,7 @@
 {{$INSTALL_DIR := or (.INSTALL_DIR) "<ProgramFiles>/Google/Cloud Operations/Ops Agent" -}}
 {{$DATA_DIR := or (.DATA_DIR) "<ProgramData>/Google/Cloud Operations/Ops Agent" -}}
 {
-  "name": "google-cloud-ops-agent",
+  "name": "google-cloud-ops-agent-1",
   "version": "{{$PKG_VERSION}}",
   "arch": "{{$ARCH}}",
   "authors": "Google Cloud Ops Agent",
@@ -18,7 +18,7 @@
     "out\\bin\\fluent-bit.exe": "{{$INSTALL_DIR}}/bin/fluent-bit.exe",
     "out\\bin\\fluent-bit.dll": "{{$INSTALL_DIR}}/bin/fluent-bit.dll",
     "out\\bin\\google-cloud-metrics-agent_{{$GOOS}}_{{$GOARCH}}.exe": "{{$INSTALL_DIR}}/bin/google-cloud-metrics-agent_{{$GOOS}}_{{$GOARCH}}.exe",
-    "out\\bin\\google-cloud-ops-agent.exe": "{{$INSTALL_DIR}}/bin/google-cloud-ops-agent.exe",
+    "out\\bin\\google-cloud-ops-agent-1.exe": "{{$INSTALL_DIR}}/bin/google-cloud-ops-agent-1.exe",
     "confgenerator\\windows-default-config.yaml": "{{$INSTALL_DIR}}/config/config.yaml"
   },
   "install": {
@@ -37,7 +37,7 @@
         "out/bin/fluent-bit.exe",
         "out/bin/fluent-bit.dll",
         "out/bin/google-cloud-metrics-agent_{{$GOOS}}_{{$GOARCH}}.exe",
-        "out/bin/google-cloud-ops-agent.exe",
+        "out/bin/google-cloud-ops-agent-1.exe",
         "confgenerator/windows-default-config.yaml",
         "pkg/goo/maint.ps1"
       ]

@@ -16,7 +16,7 @@
 
 # Package build scripts can use this by setting $DESTDIR before launching the
 # script.
-prefix=/opt/google-cloud-ops-agent
+prefix=/opt/google-cloud-ops-agent-1
 sysconfdir=/etc
 systemdsystemunitdir=$(pkg-config systemd --variable=systemdsystemunitdir)
 systemdsystempresetdir=$(pkg-config systemd --variable=systemdsystempresetdir)
@@ -44,7 +44,7 @@ function build_collectd() {
   cd submodules/collectd
   autoreconf -f -i
   ./configure --prefix=$subagentdir/collectd \
-    --with-useragent="google-cloud-ops-agent-metrics/${PKG_VERSION}" \
+    --with-useragent="google-cloud-ops-agent-1-metrics/${PKG_VERSION}" \
     --with-data-max-name-len=256 \
     --disable-all-plugins \
     --disable-static \
@@ -120,8 +120,8 @@ function build_systemd() {
 (build_opsagent)
 (build_systemd)
 # TODO: Build sample config file
-mkdir -p "$DESTDIR/$sysconfdir/google-cloud-ops-agent/"
-cp "confgenerator/default-config.yaml" "$DESTDIR/$sysconfdir/google-cloud-ops-agent/config.yaml"
+mkdir -p "$DESTDIR/$sysconfdir/google-cloud-ops-agent-1/"
+cp "confgenerator/default-config.yaml" "$DESTDIR/$sysconfdir/google-cloud-ops-agent-1/config.yaml"
 
 # N.B. Don't include $DESTDIR itself in the tarball, since mktemp -d will create it mode 0700.
-(cd "$DESTDIR" && tar -czf /tmp/google-cloud-ops-agent.tgz *)
+(cd "$DESTDIR" && tar -czf /tmp/google-cloud-ops-agent-1.tgz *)

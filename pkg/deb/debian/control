@@ -1,11 +1,11 @@
-Source: google-cloud-ops-agent
+Source: google-cloud-ops-agent-1
 Section: misc
 Priority: extra
-Maintainer: Google Cloud Ops Agent <google-cloud-ops-agent@google.com>
+Maintainer: Google Cloud Ops Agent <google-cloud-ops-agent-1@google.com>
 Build-Depends: debhelper (>= 10)
 Standards-Version: 3.9.4
 
-Package: google-cloud-ops-agent
+Package: google-cloud-ops-agent-1
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Conflicts: stackdriver-agent, google-fluentd

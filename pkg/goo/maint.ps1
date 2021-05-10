@@ -26,4 +26,4 @@ $envFromMatch = {
 }
 $InstallDir = [regex]::Replace($InstallDir,'^<([^>]+)>',$envFromMatch)
 
-& "$InstallDir\bin\google-cloud-ops-agent.exe" "--$Action"
+& "$InstallDir\bin\google-cloud-ops-agent-1.exe" "--$Action"

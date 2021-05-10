@@ -31,4 +31,4 @@ switch ($Arch) {
   -var:ARCH=$Arch `
   -var:GOOS=$Goos `
   -var:GOARCH=$GoArch `
-  pkg/goo/google-cloud-ops-agent.goospec
+  pkg/goo/google-cloud-ops-agent-1.goospec

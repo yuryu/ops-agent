@@ -9,11 +9,11 @@
 %endif
 %endif
 
-Name: google-cloud-ops-agent
+Name: google-cloud-ops-agent-1
 Version: %{package_version}
 Release: 1%{?dist}
 Summary: Google Cloud Ops Agent
-Packager: Google Cloud Ops Agent <google-cloud-ops-agent@google.com>
+Packager: Google Cloud Ops Agent <google-cloud-ops-agent-1@google.com>
 License: ASL 2.0
 %if 0%{?rhel} <= 7
 BuildRequires: systemd
@@ -48,15 +48,15 @@ CODE_VERSION=%{version} BUILD_DISTRO=${build_distro#.} DESTDIR="%{buildroot}" ./
 %{_unitdir}-preset/*-%{name}*
 
 %post
-%systemd_post google-cloud-ops-agent.target
+%systemd_post google-cloud-ops-agent-1.target
 if [ $1 -eq 1 ]; then  # Initial installation
-  systemctl start google-cloud-ops-agent.target >/dev/null 2>&1 || :
+  systemctl start google-cloud-ops-agent-1.target >/dev/null 2>&1 || :
 fi
 
 %preun
-%systemd_preun google-cloud-ops-agent.target
+%systemd_preun google-cloud-ops-agent-1.target
 
 %postun
-%systemd_postun_with_restart google-cloud-ops-agent.target
+%systemd_postun_with_restart google-cloud-ops-agent-1.target
 
 %changelog

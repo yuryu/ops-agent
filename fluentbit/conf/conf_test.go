@@ -647,7 +647,7 @@ func TestGenerateFluentBitMainConfig(t *testing.T) {
     Flush      1
     # We use systemd to manage Fluent Bit instead.
     Daemon     off
-    # Log_File is set by Fluent Bit systemd unit (e.g. /var/log/google-cloud-ops-agent/subagents/logging-module.log).
+    # Log_File is set by Fluent Bit systemd unit (e.g. /var/log/google-cloud-ops-agent-1/subagents/logging-module.log).
     Log_Level  info
 
     # https://docs.fluentbit.io/manual/administration/monitoring
@@ -657,7 +657,7 @@ func TestGenerateFluentBitMainConfig(t *testing.T) {
     HTTP_PORT    2020
 
     # https://docs.fluentbit.io/manual/administration/buffering-and-storage#service-section-configuration
-    # storage.path is set by Fluent Bit systemd unit (e.g. /var/lib/google-cloud-ops-agent/fluent-bit/buffers).
+    # storage.path is set by Fluent Bit systemd unit (e.g. /var/lib/google-cloud-ops-agent-1/fluent-bit/buffers).
     storage.sync               normal
     # Enable the data integrity check when writing and reading data from the filesystem.
     storage.checksum           on
@@ -700,7 +700,7 @@ func TestGenerateFluentBitMainConfig(t *testing.T) {
     Flush      1
     # We use systemd to manage Fluent Bit instead.
     Daemon     off
-    # Log_File is set by Fluent Bit systemd unit (e.g. /var/log/google-cloud-ops-agent/subagents/logging-module.log).
+    # Log_File is set by Fluent Bit systemd unit (e.g. /var/log/google-cloud-ops-agent-1/subagents/logging-module.log).
     Log_Level  info
 
     # https://docs.fluentbit.io/manual/administration/monitoring
@@ -710,7 +710,7 @@ func TestGenerateFluentBitMainConfig(t *testing.T) {
     HTTP_PORT    2020
 
     # https://docs.fluentbit.io/manual/administration/buffering-and-storage#service-section-configuration
-    # storage.path is set by Fluent Bit systemd unit (e.g. /var/lib/google-cloud-ops-agent/fluent-bit/buffers).
+    # storage.path is set by Fluent Bit systemd unit (e.g. /var/lib/google-cloud-ops-agent-1/fluent-bit/buffers).
     storage.sync               normal
     # Enable the data integrity check when writing and reading data from the filesystem.
     storage.checksum           on
@@ -901,7 +901,7 @@ func TestGenerateFluentBitMainConfigWindows(t *testing.T) {
     Flush      1
     # We use systemd to manage Fluent Bit instead.
     Daemon     off
-    # Log_File is set by Fluent Bit systemd unit (e.g. /var/log/google-cloud-ops-agent/subagents/logging-module.log).
+    # Log_File is set by Fluent Bit systemd unit (e.g. /var/log/google-cloud-ops-agent-1/subagents/logging-module.log).
     Log_Level  info
 
     # https://docs.fluentbit.io/manual/administration/monitoring
@@ -911,7 +911,7 @@ func TestGenerateFluentBitMainConfigWindows(t *testing.T) {
     HTTP_PORT    2020
 
     # https://docs.fluentbit.io/manual/administration/buffering-and-storage#service-section-configuration
-    # storage.path is set by Fluent Bit systemd unit (e.g. /var/lib/google-cloud-ops-agent/fluent-bit/buffers).
+    # storage.path is set by Fluent Bit systemd unit (e.g. /var/lib/google-cloud-ops-agent-1/fluent-bit/buffers).
     storage.sync               normal
     # Enable the data integrity check when writing and reading data from the filesystem.
     storage.checksum           on
