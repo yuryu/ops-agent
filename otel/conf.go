@@ -54,7 +54,7 @@ service:
       disk:
       filesystem:
       network:
-      swap:
+      paging:
       process:`
 
 	iisReceiverConf = `windowsperfcounters/iis_{{.IISID}}:
@@ -88,7 +88,7 @@ service:
           - Transactions/sec
           - Write Transactions/sec`
 
-	stackdriverExporterConf = `stackdriver/{{.StackdriverID}}:
+	stackdriverExporterConf = `googlecloud/{{.StackdriverID}}:
     user_agent: {{.UserAgent}}
     metric:
       prefix: {{.Prefix}}`
@@ -101,7 +101,7 @@ service:
         static_configs:
         - targets: ['0.0.0.0:8888']`
 
-	agentExporterConf = `stackdriver/agent:
+	agentExporterConf = `googlecloud/agent:
     user_agent: $USERAGENT
     metric:
       prefix: agent.googleapis.com/`
@@ -115,7 +115,7 @@ service:
         - metricstransform/agent
         - resourcedetection
       exporters:
-        - stackdriver/agent`
+        - googlecloud/agent`
 
 	serviceConf = `metrics/{{.ID}}:
       receivers:  {{.Receivers}}
@@ -138,7 +138,9 @@ service:
       exclude:
         match_type: strict
         metric_names:
-          - system.network.dropped_packets
+          - system.network.dropped
+          - system.filesystem.inodes.usage
+          - system.paging.faults
 
   # convert from opentelemetry metric formats to cloud monitoring formats
   metricstransform/system:
@@ -199,8 +201,8 @@ service:
       - metric_name: system.disk.write_io
         action: update
         new_name: disk/write_bytes_count
-      # system.disk.ops -> disk/operation_count
-      - metric_name: system.disk.ops
+      # system.disk.operations -> disk/operation_count
+      - metric_name: system.disk.operations
         action: update
         new_name: disk/operation_count
       # system.disk.io_time -> disk/io_time
@@ -221,9 +223,10 @@ service:
       - metric_name: system.disk.pending_operations
         action: update
         new_name: disk/pending_operations
-        operations:
-          # change data type from int64 -> double
-          - action: toggle_scalar_data_type
+      # system.disk.merged -> disk/merged_operations
+      - metric_name: system.disk.merged
+        action: update
+        new_name: agent.googleapis.com/disk/merged_operations
       # system.filesystem.usage -> disk/bytes_used
       - metric_name: system.filesystem.usage
         action: update
@@ -325,26 +328,34 @@ service:
               # transmit -> tx
               - value: transmit
                 new_value: tx
-      # system.network.tcp_connections -> network/tcp_connections
-      - metric_name: system.network.tcp_connections
+      # system.network.connections -> network/tcp_connections
+      - metric_name: system.network.connections
         action: update
         new_name: network/tcp_connections
         operations:
           # change data type from int64 -> double
           - action: toggle_scalar_data_type
+          # remove udp data
+          - action: delete_label_value
+            label: protocol
+            label_value: udp
           # change label state -> tcp_state
           - action: update_label
             label: state
             new_label: tcp_state
-      # system.swap.usage -> swap/bytes_used
-      - metric_name: system.swap.usage
+          # remove protocol label
+          - action: aggregate_labels
+            label_set: [ state ]
+            aggregation_type: sum
+      # system.paging.usage -> swap/bytes_used
+      - metric_name: system.paging.usage
         action: update
         new_name: swap/bytes_used
         operations:
           # change data type from int64 -> double
           - action: toggle_scalar_data_type
-      # system.swap.utilization -> swap/percent_used
-      - metric_name: system.swap.utilization
+      # system.paging.utilization -> swap/percent_used
+      - metric_name: system.paging.utilization
         action: update
         new_name: swap/percent_used
       # duplicate swap/percent_used -> pagefile/percent_used
@@ -356,8 +367,8 @@ service:
           - action: aggregate_labels
             label_set: [ state ]
             aggregation_type: sum
-      # system.swap.paging_ops -> swap/io
-      - metric_name: system.swap.paging_ops
+      # system.paging.operations -> swap/io
+      - metric_name: system.paging.operations
         action: update
         new_name: swap/io
         operations:
