@@ -42,6 +42,9 @@ var confTemplate = template.Must(template.New("conf").Funcs(templateFunctions).P
 {{- end}}
 processors:
   {{template "defaultprocessor" .}}
+{{- range .ExcludeMetrics}}
+  {{template "excludemetrics" .}}
+{{- end}}
 exporters:
 {{- range .Stackdriver}}
   {{template "stackdriver" .}}
@@ -66,6 +69,14 @@ service:
       paging:
       process:
       processes:
+{{- end -}}
+
+{{define "excludemetrics" -}}
+  {{.ExcludeMetricsID}}:
+    metrics:
+      exclude:
+        match_type: regexp
+        metric_names: {{.MetricPrefixes}}
 {{- end -}}
 
 {{define "iis" -}}
@@ -623,6 +634,11 @@ type HostMetrics struct {
 	CollectionInterval string
 }
 
+type ExcludeMetrics struct {
+	ExcludeMetricsID string
+	MetricPrefixes   string
+}
+
 type Service struct {
 	ID         string
 	Processors string
@@ -637,15 +653,15 @@ type Stackdriver struct {
 }
 
 type Config struct {
-	HostMetrics []*HostMetrics
-	MSSQL       []*MSSQL
-	IIS         []*IIS
-	Stackdriver []*Stackdriver
-	Service     []*Service
-
-	UserAgent string
-	Version   string
-	Windows   bool
+	HostMetrics    []*HostMetrics
+	MSSQL          []*MSSQL
+	IIS            []*IIS
+	Stackdriver    []*Stackdriver
+	Service        []*Service
+	ExcludeMetrics []*ExcludeMetrics
+	UserAgent      string
+	Version        string
+	Windows        bool
 }
 
 func extractFunctionError(err error) error {

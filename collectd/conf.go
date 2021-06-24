@@ -27,14 +27,20 @@ import (
 // Ops Agent config.
 // TODO(lingshi) Move these structs and the validation logic to the confgenerator folder. Make them pointers.
 type Metrics struct {
-	Receivers map[string]Receiver `yaml:"receivers"`
-	Exporters map[string]Exporter `yaml:"exporters"`
-	Service   Service             `yaml:"service"`
+	Receivers  map[string]Receiver  `yaml:"receivers"`
+	Processors map[string]Processor `yaml:"processors"`
+	Exporters  map[string]Exporter  `yaml:"exporters"`
+	Service    Service              `yaml:"service"`
 }
 
 type Receiver struct {
 	Type               string `yaml:"type"`
 	CollectionInterval string `yaml:"collection_interval"` // time.Duration format
+}
+
+type Processor struct {
+	Type           string   `yaml:"type"`
+	MetricPrefixes []string `yaml:"metric_prefixes"`
 }
 
 type Exporter struct {
@@ -46,8 +52,9 @@ type Service struct {
 }
 
 type Pipeline struct {
-	ReceiverIDs []string `yaml:"receivers"`
-	ExporterIDs []string `yaml:"exporters"`
+	ReceiverIDs  []string `yaml:"receivers"`
+	ProcessorIDs []string `yaml:"processors"`
+	ExporterIDs  []string `yaml:"exporters"`
 }
 
 // Collectd internal config related.
