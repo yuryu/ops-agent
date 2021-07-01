@@ -177,9 +177,6 @@ func testGenerateConfsWithValidInput(t *testing.T, platform platformConfig) {
 					t.Fatalf("DeleteFile(%q) got: %v", builtInConfPath, err)
 				}
 			}
-			if err = os.Remove(mergedConfPath); err != nil {
-				t.Fatalf("DeleteFile(%q) got: %v", mergedConfPath, err)
-			}
 		})
 	}
 }
@@ -259,7 +256,6 @@ func testGenerateConfigsWithInvalidInput(t *testing.T, platform platformConfig) 
 			if err = os.Remove(builtInConfPath); err != nil {
 				t.Fatalf("DeleteFile(%q) got: %v", builtInConfPath, err)
 			}
-			os.Remove(mergedConfPath)
 		})
 	}
 }

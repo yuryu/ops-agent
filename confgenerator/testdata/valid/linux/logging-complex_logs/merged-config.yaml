@@ -1,0 +1,84 @@
+logging:
+  receivers:
+    log_source_id1:
+      type: files
+      include_paths:
+      - /path/to/log/1/a/*
+      - /path/to/log/1/b/*
+      exclude_paths:
+      - /path/to/log/1/a/exclude_a
+      - /path/to/log/1/b/exclude_b
+    log_source_id2:
+      type: files
+      include_paths:
+      - /path/to/log/2/a/*
+      - /path/to/log/2/b/*
+      exclude_paths:
+      - /path/to/log/2/a/exclude_a
+      - /path/to/log/2/b/exclude_b
+    syslog:
+      type: files
+      include_paths:
+      - /var/log/messages
+      - /var/log/syslog
+    test_syslog_source_id_tcp:
+      type: syslog
+      transport_protocol: tcp
+      listen_host: 1.1.1.1
+      listen_port: 1111
+    test_syslog_source_id_udp:
+      type: syslog
+      transport_protocol: udp
+      listen_host: 2.2.2.2
+      listen_port: 2222
+  exporters:
+    google:
+      type: google_cloud_logging
+  service:
+    pipelines:
+      default_pipeline: {}
+      pipeline1:
+        receivers:
+        - log_source_id1
+        exporters:
+        - google
+      pipeline2:
+        receivers:
+        - log_source_id2
+        exporters:
+        - google
+      pipeline3:
+        receivers:
+        - test_syslog_source_id_tcp
+        processors:
+        - lib:syslog-rfc5424
+        exporters:
+        - google
+      pipeline4:
+        receivers:
+        - test_syslog_source_id_udp
+        processors:
+        - lib:syslog-rfc3164
+        exporters:
+        - google
+metrics:
+  receivers:
+    hostmetrics:
+      type: hostmetrics
+      collection_interval: 60s
+  processors:
+    metrics_filter:
+      type: exclude_metrics
+      metrics_pattern: []
+  exporters:
+    google:
+      type: google_cloud_monitoring
+  service:
+    pipelines:
+      default_pipeline:
+        receivers:
+        - hostmetrics
+        processors:
+        - metrics_filter
+        exporters:
+        - google

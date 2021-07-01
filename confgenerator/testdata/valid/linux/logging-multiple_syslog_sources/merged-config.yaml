@@ -1,0 +1,64 @@
+logging:
+  receivers:
+    syslog:
+      type: files
+      include_paths:
+      - /var/log/messages
+      - /var/log/syslog
+    test_syslog_source_id_tcp:
+      type: syslog
+      transport_protocol: tcp
+      listen_host: 1.1.1.1
+      listen_port: 1111
+    test_syslog_source_id_udp:
+      type: syslog
+      transport_protocol: udp
+      listen_host: 2.2.2.2
+      listen_port: 2222
+  processors:
+    rfc5424:
+      type: parse_regex
+      regex: ^\<(?<pri>[0-9]{1,5})\>1 (?<time>[^ ]+) (?<host>[^ ]+) (?<ident>[^ ]+) (?<pid>[-0-9]+) (?<msgid>[^ ]+) (?<extradata>(\[(.*?)\]|-)) (?<message>.+)$
+      time_key: time
+      time_format: '%Y-%m-%dT%H:%M:%S.%L%Z'
+  exporters:
+    google:
+      type: google_cloud_logging
+  service:
+    pipelines:
+      default_pipeline: {}
+      pipeline1:
+        receivers:
+        - test_syslog_source_id_tcp
+        processors:
+        - rfc5424
+        exporters:
+        - google
+      pipeline2:
+        receivers:
+        - test_syslog_source_id_udp
+        processors:
+        - lib:syslog-rfc3164
+        exporters:
+        - google
+metrics:
+  receivers:
+    hostmetrics:
+      type: hostmetrics
+      collection_interval: 60s
+  processors:
+    metrics_filter:
+      type: exclude_metrics
+      metrics_pattern: []
+  exporters:
+    google:
+      type: google_cloud_monitoring
+  service:
+    pipelines:
+      default_pipeline:
+        receivers:
+        - hostmetrics
+        processors:
+        - metrics_filter
+        exporters:
+        - google

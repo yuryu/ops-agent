@@ -1,0 +1,94 @@
+logging:
+  receivers:
+    log_source_id1:
+      type: files
+      include_paths:
+      - /path/to/log/1/*
+    log_source_id2:
+      type: files
+      include_paths:
+      - /path/to/log/2/a
+      - /path/to/log/2/b
+    log_source_id3:
+      type: files
+      include_paths:
+      - /path/to/log/3/*
+      exclude_paths:
+      - /path/to/log/3/exclude
+    log_source_id4:
+      type: files
+      include_paths:
+      - /path/to/log/4/*
+      exclude_paths:
+      - /path/to/log/4/exclude_a
+      - /path/to/log/4/exclude_b
+    log_source_id5:
+      type: files
+      include_paths:
+      - /path/to/log/5/*
+    syslog:
+      type: files
+      include_paths:
+      - /var/log/messages
+      - /var/log/syslog
+  processors:
+    parser_id5:
+      type: parse_regex
+      regex: regex_pattern_5
+      field: key_5
+      time_key: time_key_5
+      time_format: time_format_5
+  exporters:
+    google:
+      type: google_cloud_logging
+  service:
+    pipelines:
+      default_pipeline: {}
+      pipeline1:
+        receivers:
+        - log_source_id1
+        exporters:
+        - google
+      pipeline2:
+        receivers:
+        - log_source_id2
+        exporters:
+        - google
+      pipeline3:
+        receivers:
+        - log_source_id3
+        exporters:
+        - google
+      pipeline4:
+        receivers:
+        - log_source_id4
+        exporters:
+        - google
+      pipeline5:
+        receivers:
+        - log_source_id5
+        processors:
+        - parser_id5
+        exporters:
+        - google
+metrics:
+  receivers:
+    hostmetrics:
+      type: hostmetrics
+      collection_interval: 60s
+  processors:
+    metrics_filter:
+      type: exclude_metrics
+      metrics_pattern: []
+  exporters:
+    google:
+      type: google_cloud_monitoring
+  service:
+    pipelines:
+      default_pipeline:
+        receivers:
+        - hostmetrics
+        processors:
+        - metrics_filter
+        exporters:
+        - google

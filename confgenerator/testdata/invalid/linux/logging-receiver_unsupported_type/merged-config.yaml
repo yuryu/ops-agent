@@ -1,0 +1,48 @@
+logging:
+  receivers:
+    receiver_1:
+      type: unsupported_type
+      include_paths:
+      - /var/log/messages
+      - /var/log/syslog
+    syslog:
+      type: files
+      include_paths:
+      - /var/log/messages
+      - /var/log/syslog
+  exporters:
+    google:
+      type: google_cloud_logging
+  service:
+    pipelines:
+      custom_pipeline:
+        receivers:
+        - receiver_1
+        exporters:
+        - google
+      default_pipeline:
+        receivers:
+        - syslog
+        exporters:
+        - google
+metrics:
+  receivers:
+    hostmetrics:
+      type: hostmetrics
+      collection_interval: 60s
+  processors:
+    metrics_filter:
+      type: exclude_metrics
+      metrics_pattern: []
+  exporters:
+    google:
+      type: google_cloud_monitoring
+  service:
+    pipelines:
+      default_pipeline:
+        receivers:
+        - hostmetrics
+        processors:
+        - metrics_filter
+        exporters:
+        - google
