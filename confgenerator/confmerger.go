@@ -263,7 +263,7 @@ func mergeConfigs(original, overrides *UnifiedConfig) {
 
 		if overrides.Metrics.Service != nil {
 			for name, pipeline := range overrides.Metrics.Service.Pipelines {
-				// Overrides metrics.service.pipelines.<non_default_pipelines>
+				// Overrides metrics.service.pipelines.
 				original.Metrics.Service.Pipelines[name] = pipeline
 			}
 		}
