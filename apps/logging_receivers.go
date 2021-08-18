@@ -26,7 +26,7 @@ func (r LoggingReceiverFiles) Type() string {
 }
 
 func init() {
-	loggingReceiverTypes.registerType(func() component { return &LoggingReceiverFiles{} })
+	confgenerator.LoggingReceiverTypes.RegisterType(func() component { return &LoggingReceiverFiles{} })
 }
 
 type LoggingReceiverSyslog struct {
@@ -42,7 +42,7 @@ func (r LoggingReceiverSyslog) Type() string {
 }
 
 func init() {
-	loggingReceiverTypes.registerType(func() component { return &LoggingReceiverSyslog{} })
+	confgenerator.LoggingReceiverTypes.RegisterType(func() component { return &LoggingReceiverSyslog{} })
 }
 
 type LoggingReceiverWinevtlog struct {
@@ -56,5 +56,5 @@ func (r LoggingReceiverWinevtlog) Type() string {
 }
 
 func init() {
-	loggingReceiverTypes.registerType(func() component { return &LoggingReceiverWinevtlog{} }, "windows")
+	confgenerator.LoggingReceiverTypes.RegisterType(func() component { return &LoggingReceiverWinevtlog{} }, "windows")
 }

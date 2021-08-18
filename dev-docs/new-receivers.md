@@ -26,7 +26,7 @@ Related PRs:
 ## Example code for IIS application
 
 ```go
-package confgenerator
+package apps
  
 import "github.com/GoogleCloudPlatform/ops-agent/confgenerator/otel"
  

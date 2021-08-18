@@ -78,5 +78,5 @@ func (r MetricsReceiverIis) Pipelines() []otel.Pipeline {
 }
 
 func init() {
-	metricsReceiverTypes.registerType(func() component { return &MetricsReceiverIis{} }, "windows")
+	confgenerator.MetricsReceiverTypes.RegisterType(func() component { return &MetricsReceiverIis{} }, "windows")
 }

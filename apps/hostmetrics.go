@@ -291,5 +291,5 @@ func (r MetricsReceiverHostmetrics) Pipelines() []otel.Pipeline {
 }
 
 func init() {
-	metricsReceiverTypes.registerType(func() component { return &MetricsReceiverHostmetrics{} })
+	confgenerator.MetricsReceiverTypes.RegisterType(func() component { return &MetricsReceiverHostmetrics{} })
 }

@@ -192,7 +192,7 @@ type componentTypeRegistry struct {
 	TypeMap map[string]*componentFactory
 }
 
-func (r *componentTypeRegistry) registerType(constructor func() component, platforms ...string) {
+func (r *componentTypeRegistry) RegisterType(constructor func() component, platforms ...string) {
 	name := constructor().Type()
 	if _, ok := r.TypeMap[name]; ok {
 		panic(fmt.Sprintf("attempt to register duplicate %s %s type: %q", r.Subagent, r.Kind, name))

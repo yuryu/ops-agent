@@ -72,5 +72,5 @@ func (m MetricsReceiverMssql) Pipelines() []otel.Pipeline {
 }
 
 func init() {
-	metricsReceiverTypes.registerType(func() component { return &MetricsReceiverMssql{} }, "windows")
+	confgenerator.MetricsReceiverTypes.RegisterType(func() component { return &MetricsReceiverMssql{} }, "windows")
 }

@@ -24,7 +24,7 @@ func (r LoggingProcessorParseJson) Type() string {
 }
 
 func init() {
-	loggingProcessorTypes.registerType(func() component { return &LoggingProcessorParseJson{} })
+	confgenerator.LoggingProcessorTypes.RegisterType(func() component { return &LoggingProcessorParseJson{} })
 }
 
 type LoggingProcessorParseRegex struct {
@@ -39,5 +39,5 @@ func (r LoggingProcessorParseRegex) Type() string {
 }
 
 func init() {
-	loggingProcessorTypes.registerType(func() component { return &LoggingProcessorParseRegex{} })
+	confgenerator.LoggingProcessorTypes.RegisterType(func() component { return &LoggingProcessorParseRegex{} })
 }
