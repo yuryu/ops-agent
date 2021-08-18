@@ -244,7 +244,7 @@ type LoggingReceiver interface {
 	component
 }
 
-var loggingReceiverTypes = &componentTypeRegistry{
+var LoggingReceiverTypes = &componentTypeRegistry{
 	Subagent: "logging", Kind: "receiver",
 }
 
@@ -317,7 +317,7 @@ type LoggingExporter interface {
 	component
 }
 
-var LoggingExporterTypes = &componentTypeRegistry{
+var loggingExporterTypes = &componentTypeRegistry{
 	Subagent: "logging", Kind: "exporter",
 }
 
@@ -327,7 +327,7 @@ type loggingExporterWrapper struct {
 }
 
 func (l *loggingExporterWrapper) UnmarshalYAML(ctx context.Context, unmarshal func(interface{}) error) error {
-	return LoggingExporterTypes.unmarshalComponentYaml(ctx, &l.inner, unmarshal)
+	return loggingExporterTypes.unmarshalComponentYaml(ctx, &l.inner, unmarshal)
 }
 
 func (m *loggingExporterMap) UnmarshalYAML(unmarshal func(interface{}) error) error {

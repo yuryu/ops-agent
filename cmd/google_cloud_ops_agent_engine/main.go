@@ -20,6 +20,7 @@ import (
 	"os"
 	"path/filepath"
 
+	_ "github.com/GoogleCloudPlatform/ops-agent/apps"
 	"github.com/GoogleCloudPlatform/ops-agent/confgenerator"
 )
 

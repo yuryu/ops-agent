@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package apps
+package confgenerator
 
 type LoggingReceiverFiles struct {
 	ConfigComponent `yaml:",inline"`
@@ -26,7 +26,7 @@ func (r LoggingReceiverFiles) Type() string {
 }
 
 func init() {
-	confgenerator.LoggingReceiverTypes.RegisterType(func() component { return &LoggingReceiverFiles{} })
+	LoggingReceiverTypes.RegisterType(func() component { return &LoggingReceiverFiles{} })
 }
 
 type LoggingReceiverSyslog struct {
@@ -42,7 +42,7 @@ func (r LoggingReceiverSyslog) Type() string {
 }
 
 func init() {
-	confgenerator.LoggingReceiverTypes.RegisterType(func() component { return &LoggingReceiverSyslog{} })
+	LoggingReceiverTypes.RegisterType(func() component { return &LoggingReceiverSyslog{} })
 }
 
 type LoggingReceiverWinevtlog struct {
@@ -56,5 +56,5 @@ func (r LoggingReceiverWinevtlog) Type() string {
 }
 
 func init() {
-	confgenerator.LoggingReceiverTypes.RegisterType(func() component { return &LoggingReceiverWinevtlog{} }, "windows")
+	LoggingReceiverTypes.RegisterType(func() component { return &LoggingReceiverWinevtlog{} }, "windows")
 }

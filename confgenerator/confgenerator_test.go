@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package confgenerator
+package confgenerator_test
 
 import (
 	"flag"
@@ -23,6 +23,7 @@ import (
 	"strings"
 	"testing"
 
+	_ "github.com/GoogleCloudPlatform/ops-agent/apps"
 	"github.com/google/go-cmp/cmp"
 	"github.com/shirou/gopsutil/host"
 )

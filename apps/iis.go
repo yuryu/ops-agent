@@ -14,12 +14,15 @@
 
 package apps
 
-import "github.com/GoogleCloudPlatform/ops-agent/confgenerator/otel"
+import (
+	"github.com/GoogleCloudPlatform/ops-agent/confgenerator"
+	"github.com/GoogleCloudPlatform/ops-agent/confgenerator/otel"
+)
 
 type MetricsReceiverIis struct {
-	ConfigComponent `yaml:",inline"`
+	confgenerator.ConfigComponent `yaml:",inline"`
 
-	MetricsReceiverShared `yaml:",inline"`
+	confgenerator.MetricsReceiverShared `yaml:",inline"`
 }
 
 func (r MetricsReceiverIis) Type() string {

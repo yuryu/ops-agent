@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package apps
+package confgenerator
 
 type LoggingProcessorParseJson struct {
 	ConfigComponent             `yaml:",inline"`
@@ -24,7 +24,7 @@ func (r LoggingProcessorParseJson) Type() string {
 }
 
 func init() {
-	confgenerator.LoggingProcessorTypes.RegisterType(func() component { return &LoggingProcessorParseJson{} })
+	LoggingProcessorTypes.RegisterType(func() component { return &LoggingProcessorParseJson{} })
 }
 
 type LoggingProcessorParseRegex struct {
@@ -39,5 +39,5 @@ func (r LoggingProcessorParseRegex) Type() string {
 }
 
 func init() {
-	confgenerator.LoggingProcessorTypes.RegisterType(func() component { return &LoggingProcessorParseRegex{} })
+	LoggingProcessorTypes.RegisterType(func() component { return &LoggingProcessorParseRegex{} })
 }
