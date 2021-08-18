@@ -27,5 +27,5 @@ func (r *LoggingExporterGoogleCloudLogging) ValidateParameters(subagent string, 
 }
 
 func init() {
-	loggingExporterTypes.registerType(func() component { return &LoggingExporterGoogleCloudLogging{} })
+	loggingExporterTypes.RegisterType(func() component { return &LoggingExporterGoogleCloudLogging{} })
 }

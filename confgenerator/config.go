@@ -213,16 +213,16 @@ func (r *componentTypeRegistry) unmarshalComponentYaml(ctx context.Context, inne
 		o = ct.constructor()
 	}
 	if o == nil {
-		var supportedTypes []string
+		var SupportedTypes []string
 		for k, ct := range r.TypeMap {
 			if ct.supportsPlatform(ctx) {
-				supportedTypes = append(supportedTypes, k)
+				SupportedTypes = append(SupportedTypes, k)
 			}
 		}
-		sort.Strings(supportedTypes)
+		sort.Strings(SupportedTypes)
 		return fmt.Errorf(`%s %s with type %q is not supported. Supported %s %s types: [%s].`,
 			r.Subagent, r.Kind, c.Type,
-			r.Subagent, r.Kind, strings.Join(supportedTypes, ", "))
+			r.Subagent, r.Kind, strings.Join(SupportedTypes, ", "))
 	}
 	*inner = o
 	return unmarshal(*inner)
@@ -254,7 +254,7 @@ type loggingReceiverWrapper struct {
 }
 
 func (l *loggingReceiverWrapper) UnmarshalYAML(ctx context.Context, unmarshal func(interface{}) error) error {
-	return loggingReceiverTypes.unmarshalComponentYaml(ctx, &l.inner, unmarshal)
+	return LoggingReceiverTypes.unmarshalComponentYaml(ctx, &l.inner, unmarshal)
 }
 
 func (m *loggingReceiverMap) UnmarshalYAML(unmarshal func(interface{}) error) error {
@@ -286,7 +286,7 @@ func (p LoggingProcessorParseShared) GetField() string {
 	return p.Field
 }
 
-var loggingProcessorTypes = &componentTypeRegistry{
+var LoggingProcessorTypes = &componentTypeRegistry{
 	Subagent: "logging", Kind: "processor",
 }
 
@@ -296,7 +296,7 @@ type loggingProcessorWrapper struct {
 }
 
 func (l *loggingProcessorWrapper) UnmarshalYAML(ctx context.Context, unmarshal func(interface{}) error) error {
-	return loggingProcessorTypes.unmarshalComponentYaml(ctx, &l.inner, unmarshal)
+	return LoggingProcessorTypes.unmarshalComponentYaml(ctx, &l.inner, unmarshal)
 }
 
 func (m *loggingProcessorMap) UnmarshalYAML(unmarshal func(interface{}) error) error {
@@ -317,7 +317,7 @@ type LoggingExporter interface {
 	component
 }
 
-var loggingExporterTypes = &componentTypeRegistry{
+var LoggingExporterTypes = &componentTypeRegistry{
 	Subagent: "logging", Kind: "exporter",
 }
 
@@ -327,7 +327,7 @@ type loggingExporterWrapper struct {
 }
 
 func (l *loggingExporterWrapper) UnmarshalYAML(ctx context.Context, unmarshal func(interface{}) error) error {
-	return loggingExporterTypes.unmarshalComponentYaml(ctx, &l.inner, unmarshal)
+	return LoggingExporterTypes.unmarshalComponentYaml(ctx, &l.inner, unmarshal)
 }
 
 func (m *loggingExporterMap) UnmarshalYAML(unmarshal func(interface{}) error) error {
@@ -382,7 +382,7 @@ func (m MetricsReceiverShared) CollectionIntervalString() string {
 	return "60s"
 }
 
-var metricsReceiverTypes = &componentTypeRegistry{
+var MetricsReceiverTypes = &componentTypeRegistry{
 	Subagent: "metrics", Kind: "receiver",
 }
 
@@ -392,7 +392,7 @@ type metricsReceiverWrapper struct {
 }
 
 func (m *metricsReceiverWrapper) UnmarshalYAML(ctx context.Context, unmarshal func(interface{}) error) error {
-	return metricsReceiverTypes.unmarshalComponentYaml(ctx, &m.inner, unmarshal)
+	return MetricsReceiverTypes.unmarshalComponentYaml(ctx, &m.inner, unmarshal)
 }
 
 func (m *metricsReceiverMap) UnmarshalYAML(unmarshal func(interface{}) error) error {
@@ -417,7 +417,7 @@ type MetricsProcessor interface {
 	Processors() []otel.Component
 }
 
-var metricsProcessorTypes = &componentTypeRegistry{
+var MetricsProcessorTypes = &componentTypeRegistry{
 	Subagent: "metrics", Kind: "processor",
 }
 
@@ -427,7 +427,7 @@ type metricsProcessorWrapper struct {
 }
 
 func (m *metricsProcessorWrapper) UnmarshalYAML(ctx context.Context, unmarshal func(interface{}) error) error {
-	return metricsProcessorTypes.unmarshalComponentYaml(ctx, &m.inner, unmarshal)
+	return MetricsProcessorTypes.unmarshalComponentYaml(ctx, &m.inner, unmarshal)
 }
 
 func (m *metricsProcessorMap) UnmarshalYAML(unmarshal func(interface{}) error) error {
